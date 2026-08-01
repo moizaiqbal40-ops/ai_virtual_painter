@@ -1,179 +1,71 @@
-````markdown
-# 🎨 AI Virtual Painter
+# AI Virtual Painter
 
-A real-time **hand gesture-based virtual drawing application** built with **Python, OpenCV, and MediaPipe**. The application enables users to draw in the air using natural hand gestures without requiring gloves, colored markers, or external hardware.
+[![Python](https://img.shields.io/badge/Python-3.9%2B-blue)](https://www.python.org/)
+[![OpenCV](https://img.shields.io/badge/OpenCV-4.x-green)](https://opencv.org/)
+[![MediaPipe](https://img.shields.io/badge/MediaPipe-Tasks%20API-orange)](https://developers.google.com/mediapipe)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-By leveraging MediaPipe's 21-hand-landmark detection, the system recognizes different gestures for drawing, color selection, brush resizing, erasing, and canvas interaction in real time.
+A real-time, hand-gesture-based drawing application. Draw in the air with your index finger — no gloves, no markers, no extra hardware — using MediaPipe's 21-point hand landmark model for gesture recognition, with simultaneous dual-hand support.
 
----
+<!-- Record a 10-15s GIF of yourself drawing, save as assets/demo.gif, then uncomment: -->
+<!-- ![Demo](assets/demo.gif) -->
 
-## ✨ Features
+## Features
 
-- 🖐️ Real-time hand tracking using MediaPipe
-- ✍️ Draw naturally with your index finger
-- 👋 Simultaneous drawing with **both hands**
-- 🎨 Interactive left-side color palette
-- 🤏 Pinch gesture to resize the brush dynamically
-- 🧽 Hand gesture eraser
-- ✨ Glow trail and particle effects
-- 💾 Save drawings as PNG images
-- 🦴 Toggle hand landmark visualization
-- ⚡ Smooth drawing using exponential moving average (EMA)
+- Real-time hand tracking via MediaPipe's HandLandmarker (Tasks API)
+- Draw with your index finger; both hands supported simultaneously, each with an independent color
+- Live brush resizing via a pinch gesture (thumb + index), with an on-screen size preview
+- Gesture-based eraser (open palm)
+- Left-sidebar color palette with hover-to-select
+- Exponential-moving-average smoothing for clean, non-jittery strokes
+- Optional glow trail and particle effects
+- Save drawings as PNG
+- Toggleable hand-skeleton overlay
 
----
+## Tech Stack
 
-## 🛠️ Tech Stack
+Python 3.9+, OpenCV, MediaPipe Tasks API, NumPy
 
-- Python 3.x
-- OpenCV
-- MediaPipe Tasks API
-- NumPy
-
----
-
-## 📂 Project Structure
-
-```text
-AI-Virtual-Painter/
-│
-├── ai_virtual_painter.py
-├── hand_landmarker.task
-├── README.md
-├── paintings/
-└── assets/
-```
-
----
-
-## 🚀 Installation
-
-### 1. Clone the repository
+## Installation
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/AI-Virtual-Painter.git
-cd AI-Virtual-Painter
-```
-
-### 2. Install dependencies
-
-```bash
-pip install opencv-python mediapipe numpy
-```
-
-### 3. Download the MediaPipe model
-
-Download the **hand_landmarker.task** model from the official MediaPipe repository and place it in the project directory.
-
-> The application automatically checks whether the model exists before launching.
-
-### 4. Run the project
-
-```bash
+git clone https://github.com/moizaiqbal40-ops/ai_virtual_painter.git
+cd ai_virtual_painter
+pip install -r requirements.txt
 python ai_virtual_painter.py
 ```
 
----
+The hand-tracking model (`hand_landmarker.task`, ~8 MB) is **not** committed to this repository — the script checks for it on startup and, if missing, prints the exact command to fetch it:
 
-## 🎮 Gesture Controls
-
-| Gesture                  | Action       |
-| ------------------------ | ------------ |
-| ☝️ Index Finger          | Draw         |
-| ✌️ Index + Middle Finger | Select Color |
-| 🤏 Thumb + Index Pinch   | Resize Brush |
-| 🖐️ Open Palm             | Erase        |
-| ✊ Fist                  | Idle         |
-
----
-
-## ⌨️ Keyboard Shortcuts
-
-| Key         | Function                       |
-| ----------- | ------------------------------ |
-| `C`         | Clear Canvas                   |
-| `G`         | Toggle Glow & Particle Effects |
-| `H`         | Toggle Hand Skeleton           |
-| `S`         | Save Current Drawing           |
-| `Q` / `ESC` | Exit Application               |
-
----
-
-## 📸 Screenshots
-
-> Add screenshots or a GIF inside the **assets/** directory.
-
-```text
-assets/
-├── demo.gif
-├── drawing.png
-├── sidebar.png
-├── resize.png
-└── erase.png
+```bash
+curl -L -o hand_landmarker.task https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task
 ```
 
-Example:
+## Gesture Controls
 
-```markdown
-![Demo](assets/demo.gif)
-```
+| Gesture | Action |
+|---|---|
+| Index finger only | Draw |
+| Index + middle finger | Select color (hover sidebar) |
+| Thumb + index pinch | Resize brush |
+| Open palm (4 fingers) | Erase |
+| Fist | Idle |
 
----
+## Keyboard Shortcuts
 
-## ⚙️ How It Works
+| Key | Function |
+|---|---|
+| `C` | Clear canvas |
+| `G` | Toggle glow/particle effects |
+| `H` | Toggle hand-skeleton overlay |
+| `S` | Save current drawing to `paintings/` |
+| `Q` / `Esc` | Quit |
 
-1. The webcam captures live video frames.
-2. MediaPipe detects 21 hand landmarks in real time.
-3. Finger positions are analyzed using geometric rules.
-4. Each gesture is mapped to a specific application state.
-5. Drawing is rendered on a persistent canvas with smoothing.
-6. Glow effects and particles enhance the visual experience.
+## How It Works
 
----
+1. Webcam frames are captured and passed to MediaPipe's `HandLandmarker`, which returns 21 landmarks per detected hand.
+2. Finger states (`fingers_up`, `thumb_extended`) are derived from landmark positions using simple geometric comparisons — no ML classifier needed for gesture recognition itself.
+3. Landmark geometry is mapped to one of five states (`Draw`, `Select`, `Resize`, `Erase`, `Idle`) per hand, independently.
+4. Draw points are smoothed with an exponential moving average before being rendered to a persistent canvas layer, composited back onto the live frame each frame.
 
-## 📈 Future Improvements
-
-- Shape recognition (Circle, Rectangle, Line)
-- Undo / Redo support
-- Multi-layer canvas
-- Stroke recording and replay
-- Export to SVG/PDF
-- Gesture customization
-- AI-based gesture classification
-
----
-
-## 💡 Computer Vision Concepts
-
-This project demonstrates several important computer vision concepts:
-
-- Real-time Hand Landmark Detection
-- Gesture Recognition
-- Feature Engineering
-- Image Compositing
-- Human-Computer Interaction (HCI)
-- State Machine Design
-- Motion Smoothing
-- Real-Time Graphics Rendering
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License.
-
----
-
-## 👨‍💻 Author
-
-**Moeeza Iqbal**
-
-Computer Science Student | Python Developer | Computer Vision Enthusiast
-
-GitHub: https://github.com/YOUR_USERNAME
-
-LinkedIn: https://linkedin.com/in/YOUR_LINKEDIN
-
----
-
-⭐ If you found this project helpful, consider giving it a star.
-````
+## Project Structure
