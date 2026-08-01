@@ -1,84 +1,179 @@
-# AI Virtual Painter — Real Finger Tracking (MediaPipe + OpenCV)
+````markdown
+# 🎨 AI Virtual Painter
 
-Koi colored marker/cap nahi chahiye — apni **khaali ungli** se hawa mein
-draw karo. Camera aapke haath ke 21 landmarks real-time detect karta hai
-aur finger gestures se decide karta hai ke aap **draw**, **color select**,
-ya **erase** (hand wave) kar rahi hain.
+A real-time **hand gesture-based virtual drawing application** built with **Python, OpenCV, and MediaPipe**. The application enables users to draw in the air using natural hand gestures without requiring gloves, colored markers, or external hardware.
 
-## 1. Setup
+By leveraging MediaPipe's 21-hand-landmark detection, the system recognizes different gestures for drawing, color selection, brush resizing, erasing, and canvas interaction in real time.
+
+---
+
+## ✨ Features
+
+- 🖐️ Real-time hand tracking using MediaPipe
+- ✍️ Draw naturally with your index finger
+- 👋 Simultaneous drawing with **both hands**
+- 🎨 Interactive left-side color palette
+- 🤏 Pinch gesture to resize the brush dynamically
+- 🧽 Hand gesture eraser
+- ✨ Glow trail and particle effects
+- 💾 Save drawings as PNG images
+- 🦴 Toggle hand landmark visualization
+- ⚡ Smooth drawing using exponential moving average (EMA)
+
+---
+
+## 🛠️ Tech Stack
+
+- Python 3.x
+- OpenCV
+- MediaPipe Tasks API
+- NumPy
+
+---
+
+## 📂 Project Structure
+
+```text
+AI-Virtual-Painter/
+│
+├── ai_virtual_painter.py
+├── hand_landmarker.task
+├── README.md
+├── paintings/
+└── assets/
+```
+
+---
+
+## 🚀 Installation
+
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/YOUR_USERNAME/AI-Virtual-Painter.git
+cd AI-Virtual-Painter
+```
+
+### 2. Install dependencies
 
 ```bash
 pip install opencv-python mediapipe numpy
+```
+
+### 3. Download the MediaPipe model
+
+Download the **hand_landmarker.task** model from the official MediaPipe repository and place it in the project directory.
+
+> The application automatically checks whether the model exists before launching.
+
+### 4. Run the project
+
+```bash
 python ai_virtual_painter.py
 ```
 
-Pehli baar run karne pe browser/OS webcam permission maang sakta hai —
-**Allow** kar dein.
+---
 
-## 2. Gestures (ye hi interface hai — koi keyboard click nahi chahiye)
+## 🎮 Gesture Controls
 
-| Gesture | Mode | Kya hota hai |
-|---|---|---|
-| ☝️ Sirf **index finger** khuli | **DRAW** | Jahan ungli move karo, wahan line banti hai |
-| ✌️ **Index + middle** dono khuli | **SELECT** | Top palette ke color box pe ~0.7 sec ruko — color select ho jata hai |
-| 🖐 **4 fingers khuli** (khula haath) | **ERASE** | Haath jahan bhi "wave" karo, wahan ki drawing mit jati hai |
-| ✊ Mutthi band | **IDLE** | Kuch nahi hota — pen "uthi hui" hai |
+| Gesture                  | Action       |
+| ------------------------ | ------------ |
+| ☝️ Index Finger          | Draw         |
+| ✌️ Index + Middle Finger | Select Color |
+| 🤏 Thumb + Index Pinch   | Resize Brush |
+| 🖐️ Open Palm             | Erase        |
+| ✊ Fist                  | Idle         |
 
-Screen ke top-right corner mein hamesha current mode ka colored badge
-dikhta rahega (Green=Draw, Orange=Select, Red=Erase, Gray=Idle) — taake
-aap bina soche confirm kar sakein ke system kya samajh raha hai.
+---
 
-## 3. Keyboard (extra, optional)
+## ⌨️ Keyboard Shortcuts
 
-| Key | Action |
-|---|---|
-| `c` | Pura canvas clear |
-| `+` / `-` | Brush aur eraser size badhao/kam karo |
-| `h` | Hand-skeleton overlay on/off (dikhane ke liye ke landmarks kaise kaam kar rahe hain) |
-| `s` | Drawing ko `paintings/` folder mein PNG save karo |
-| `q` / `Esc` | Band karo |
+| Key         | Function                       |
+| ----------- | ------------------------------ |
+| `C`         | Clear Canvas                   |
+| `G`         | Toggle Glow & Particle Effects |
+| `H`         | Toggle Hand Skeleton           |
+| `S`         | Save Current Drawing           |
+| `Q` / `ESC` | Exit Application               |
 
-## 4. Troubleshooting
+---
 
-- **Camera nahi khul rahi:** file mein `CAM_INDEX = 0` ko `1` kar dein.
-- **Haath detect nahi ho raha:** achi lighting rakhein, haath camera se
-  ~30-50cm door rakhein, poora haath frame ke andar hona chahiye.
-- **Draw mode "flicker" karta hai:** thoda dheeme move karein — fast
-  motion mein MediaPipe kabhi landmark miss kar deta hai (`min_tracking_confidence`
-  ko file mein 0.6 se 0.5 kar ke bhi try kar sakti hain).
+## 📸 Screenshots
 
-## 5. Viva / Portfolio ke liye Concepts
+> Add screenshots or a GIF inside the **assets/** directory.
 
-1. **Real-time landmark detection** — MediaPipe Hands ek pre-trained
-   lightweight CNN model use karta hai jo har frame mein haath ke 21
-   keypoints (wrist, knuckles, fingertips) predict karta hai — ye
-   syllabus ke "Object Detection & Recognition (Deep Learning models)"
-   wale part ko cover karta hai, bina khud model train kiye.
-2. **Geometric gesture logic** — Har finger ka "up/down" state uske
-   fingertip aur PIP joint ke y-coordinate compare kar ke nikala jata
-   hai (`landmarks[tip].y < landmarks[pip].y`). Ye simple lekin
-   effective feature-engineering hai.
-3. **State machine UI** — Gesture combinations (kitni fingers khuli
-   hain) ek chhoti state machine banati hain: Draw / Select / Erase /
-   Idle — bina kisi button ke, sirf hand pose se.
-4. **Image compositing** — Har frame mein persistent drawing canvas ko
-   binary mask (`cv2.threshold` + `bitwise_and`/`bitwise_or`) se live
-   video ke upar merge kiya jata hai — image processing ka core concept.
+```text
+assets/
+├── demo.gif
+├── drawing.png
+├── sidebar.png
+├── resize.png
+└── erase.png
+```
 
-## 6. Extend Karne Ke Ideas (extra marks ke liye)
+Example:
 
-- Thumb-index pinch distance se brush size control karna (real-time).
-- Two-hand support: ek haath draw, dusra haath color palette control.
-- Shape recognition: agar drawn stroke roughly circle/rectangle jaisa
-  ho to auto-perfect shape mein snap kar dena.
-- Recording: har stroke ko timestamp ke sath save kar ke "replay"
-  feature banana.
+```markdown
+![Demo](assets/demo.gif)
+```
 
-## 7. Files
+---
 
-- `ai_virtual_painter.py` — main program (real finger tracking version)
-- `virtual_painter.py` — pehla version (colored marker + HSV tracking) —
-  agar aap dono approaches side-by-side dikhana chahein (marker-based
-  vs. landmark-based) to ye comparison portfolio mein aur bhi strong
-  lagega.
-- `paintings/` — saved drawings (auto-created)
+## ⚙️ How It Works
+
+1. The webcam captures live video frames.
+2. MediaPipe detects 21 hand landmarks in real time.
+3. Finger positions are analyzed using geometric rules.
+4. Each gesture is mapped to a specific application state.
+5. Drawing is rendered on a persistent canvas with smoothing.
+6. Glow effects and particles enhance the visual experience.
+
+---
+
+## 📈 Future Improvements
+
+- Shape recognition (Circle, Rectangle, Line)
+- Undo / Redo support
+- Multi-layer canvas
+- Stroke recording and replay
+- Export to SVG/PDF
+- Gesture customization
+- AI-based gesture classification
+
+---
+
+## 💡 Computer Vision Concepts
+
+This project demonstrates several important computer vision concepts:
+
+- Real-time Hand Landmark Detection
+- Gesture Recognition
+- Feature Engineering
+- Image Compositing
+- Human-Computer Interaction (HCI)
+- State Machine Design
+- Motion Smoothing
+- Real-Time Graphics Rendering
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License.
+
+---
+
+## 👨‍💻 Author
+
+**Moeeza Iqbal**
+
+Computer Science Student | Python Developer | Computer Vision Enthusiast
+
+GitHub: https://github.com/YOUR_USERNAME
+
+LinkedIn: https://linkedin.com/in/YOUR_LINKEDIN
+
+---
+
+⭐ If you found this project helpful, consider giving it a star.
+````
