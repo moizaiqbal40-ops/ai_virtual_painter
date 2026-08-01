@@ -1,0 +1,8 @@
+__pycache__/
+   *.pyc
+   venv/
+   .venv/
+   paintings/
+   hand_landmarker.task
+   .DS_Store
+   .vscode/
