@@ -25,6 +25,24 @@ A real-time, hand-gesture-based drawing application. Draw in the air with your i
 ## Tech Stack
 
 Python 3.9+, OpenCV, MediaPipe Tasks API, NumPy
+## Roadmap
+
+- [ ] Shape recognition (circle, rectangle, line)
+- [ ] Undo/redo
+- [ ] Multi-layer canvas
+- [ ] Split into modules (`config.py`, `particles.py`, `ui.py`, `hand_utils.py`)
+- [ ] Unit tests for gesture-classification logic
+- [ ] GitHub Actions CI (lint + test)
+
+## License
+
+MIT — see [LICENSE](LICENSE).
+
+## Author
+
+**Moeeza Iqbal** — Computer Science student, Python & Computer Vision
+
+[GitHub](https://github.com/moizaiqbal40-ops) · [LinkedIn](https://linkedin.com/in/moeezaiqbal)
 
 ## Installation
 
