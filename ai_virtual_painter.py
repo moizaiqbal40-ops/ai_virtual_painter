@@ -4,17 +4,6 @@
 =========================================================================
 Computer Vision Project — advanced version
 
-WHAT'S NEW IN THIS VERSION:
-  - Color palette moved to a LEFT sidebar (out of the way of the canvas)
-  - BOTH hands can draw at the same time, each with its own color
-  - Drawing is SMOOTHED (exponential moving average) so lines don't
-    look shaky/jittery — much nicer strokes
-  - A PINCH gesture (thumb + index open, other 3 fingers curled) lets
-    you resize the brush live: move thumb and index apart/together and
-    the brush grows/shrinks in real time, with a preview circle
-  - Glow trail + small sparkle particles while drawing, for a more
-    playful/premium look
-
 GESTURES (per hand, independently):
   ☝️  Index only              -> DRAW
   ✌️  Index + Middle          -> SELECT (hover a color in the left sidebar)
