@@ -1,15 +1,7 @@
 """
 =========================================================================
-  AI VIRTUAL PAINTER (ADVANCED) — Two-Hand Finger Drawing with MediaPipe
+  AI VIRTUAL PAINTER (ADVANCED) 
 =========================================================================
-Computer Vision Project — advanced version
-
-GESTURES (per hand, independently):
-  ☝️  Index only              -> DRAW
-  ✌️  Index + Middle          -> SELECT (hover a color in the left sidebar)
-  🤏  Thumb + Index (others curled) -> RESIZE brush (pinch apart/together)
-  🖐  4 fingers open           -> ERASE (wave to erase)
-  ✊  Fist                     -> IDLE
 
 KEYBOARD:
   c        -> clear canvas
