@@ -10,7 +10,6 @@ KEYBOARD:
   s        -> save PNG
   q / ESC  -> quit
 
-
 =========================================================================
 SETUP (one-time):
   pip install opencv-python mediapipe numpy
